@@ -1,0 +1,11 @@
+:root{
+    --bgc: rgb(242, 239, 255);
+    --bgc--left:rgb(246, 247, 255);
+    --bgc--center:rgb(255,255,255);
+    --bgc--right:rgb(246, 247, 255);
+    --textColor: #000000;
+    --entry--footer:rgb(246, 247, 255);
+    --span:#000000;
+    --site:#879f8e;
+    --small:#5b8a72
+}

@@ -8,14 +8,20 @@
     "test:unit": "vitest --environment jsdom"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "axios": "^1.6.1",
+    "element-plus": "^2.4.2",
+    "less": "^4.2.0",
     "pinia": "^2.0.21",
-    "vue": "^3.2.38",
-    "vue-router": "^4.1.5"
+    "vue": "3.3",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/test-utils": "^2.0.2",
     "jsdom": "^20.0.0",
+    "unplugin-auto-import": "^0.16.7",
+    "unplugin-vue-components": "^0.25.2",
     "vite": "^3.0.9",
     "vitest": "^0.23.0"
   }
