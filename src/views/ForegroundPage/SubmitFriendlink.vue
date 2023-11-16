@@ -1,3 +1,67 @@
+<script setup>
+import submitFriendlink from '@/api/open/friendlink';
+import { ref } from 'vue';
+import { compressImg } from '@/utils/compress';
+
+const formData = ref({
+  url: '',
+  name: '',
+  intro: ''
+});
+const imageUrl = ref('');
+const fileList = ref([]);
+const previewImage = ref(null);
+import { ElMessage } from 'element-plus'
+const submitForm = () => {
+  const formDataObj = new FormData();
+  formDataObj.append('url', formData.value.url);
+  formDataObj.append('name', formData.value.name);
+  formDataObj.append('intro', formData.value.intro);
+  formDataObj.append('logo', fileList.value);
+  
+  submitFriendlink.submitFriendlinks(formDataObj)
+    .then(res => {
+      if (res.data.code == 20011) {
+        ElMessage({
+          message: res.data.msg,
+          type: 'success'
+        });
+      }
+    })
+    .catch(error => {
+    
+    })
+    .finally(() => {
+      // 无论成功或失败，清空文件列表和预览图片
+      fileList.value = [];
+      previewImage.value = null;
+    });
+};
+
+const submitUpload = () => {
+  $refs.upload.submit();
+};
+
+const handleFileChange = async (event) => {
+  const files = event.target.files;
+
+  // 获得图片路径进行预览
+  previewImage.value = URL.createObjectURL(files[0]);
+
+  // 压缩当前图片
+  const compressedFiles = await Promise.all(
+    Array.from(files).map((file) => compressImage(file, 0.85))
+  );
+
+  fileList.value = compressedFiles[0].file;
+};
+
+const compressImage = async (file, quality) => {
+  // 在 Vue 组件中使用
+  return compressImg(file, quality);
+};
+</script>
+
 <template>
   <div>
     <div class="subimg">
@@ -25,79 +89,7 @@
   </div>
 </template>
 
-<script>
-import submitFriendlink from '@/api/open/friendlink'
-import { compressImg } from '@/utils/compress'
-export default {
-  data() {
-    return {
-      formData: {
-        url: '',
-        name: '',
-        intro: '',
 
-      },
-      imageUrl: '',
-      fileList: [],
-      //预览图片
-      previewImage: null,
-    }
-  },
-  methods: {
-    submitForm() {
-      const formData = new FormData();
-      formData.append('url', this.formData.url)
-      formData.append('name', this.formData.name)
-      formData.append('intro', this.formData.intro)
-      formData.append('logo', this.fileList)
-      submitFriendlink.submitFriendlinks(formData)
-        .then(res => {
-          if (res.data.code == 20011) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            });
-            this.$refs.form.resetFields();
-            this.fileList = []
-            this.previewImage = null
-          }
-        })
-        .catch(error => {
-          this.fileList = []
-          this.previewImage = null
-          this.$message.error(res.data.msg)
-        });
-    },
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    async handleFileChange(event) {
-      const files = event.target.files;
-      //获得图片路劲进行预览
-      this.previewImage = URL.createObjectURL(files[0]);
-      //压缩当前图片
-      const compressedFiles = await Promise.all(
-        Array.from(files).map((file) => this.compressImage(file, 0.85))
-      );
-      this.fileList = compressedFiles[0].file
-    },
-
-    async compressImage(file, quality) {
-      // 在Vue组件中使用
-      return compressImg(file, quality);
-    },
-
-  },
-  mounted() {
-  }
-}
-</script>
 
 <style lang="less" scoped>
 .subimg {

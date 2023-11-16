@@ -1,3 +1,32 @@
+<script setup>
+import friendlinks from '@/api/open/friendlink';
+import { ref, onMounted } from 'vue';
+import { useRouter } from "vue-router"
+
+const friendlink = ref([])
+//路由
+const router = useRouter()
+
+const fetchFriendLinks = () => {
+  friendlinks.getFriendlinks()
+    .then(response => {
+      const data = response.data.data;
+      friendlink.value = data;
+    })
+    .catch(error => {
+      // 处理错误
+    });
+};
+fetchFriendLinks();
+const SubmitFriendlink = () => {
+  router.push('/subfriend');
+};
+
+onMounted(() => {
+
+});
+</script>
+
 <template>
   <div class="main">
     <div class="icon">
@@ -27,35 +56,7 @@
   </div>
 </template>
 
-<script>
-import friendlink from '@/api/open/friendlink'
-export default {
-  data() {
-    return {
-      friendlink: []
-    }
-  },
-  methods: {
-    fetchFriendLinks() {
-      friendlink.getFriendlinks()
-        .then(response => {
-          // 处理接口返回的数据
-          const data = response.data.data;
-          this.friendlink = data;
-        })
-        .catch(error => {
-          // 处理错误
-        });
-    },
-    SubmitFriendlink() {
-      this.$router.push('/subfriend')
-    }
-  },
-  mounted() {
-    this.fetchFriendLinks()
-  }
-}
-</script>
+
 
 <style lang="less" scoped>
 .main {
@@ -77,6 +78,7 @@ export default {
     align-items: center;
     padding: 20px;
     height: 30px;
+
     .left {
       flex: 1;
     }
@@ -129,4 +131,5 @@ export default {
     }
 
   }
-}</style>@/api/friendlink/friendlink
+}
+</style>

@@ -20,15 +20,17 @@ const router = createRouter({
         { path: '', component: ()=> import('../views/ForegroundPage/Post.vue'), meta: { keepAlive: true } },
         { path: 'post', component:()=> import('../views/ForegroundPage/Post.vue'),meta: { keepAlive: true } },
         { path: 'article', component:()=> import('../views/ForegroundPage/Article.vue'),meta: { keepAlive: true } },
-        // { path: 'article/:id?', name: 'article', component:()=> import('../views/ForegroundPage/ArticleContent.vue') , props: true },
+        { path: 'articles/:id', name: 'articles', component:()=> import('../views/ForegroundPage/ArticleContent.vue') , props: true },
         { path: 'friendlink', component:()=> import('../views/ForegroundPage/Friendlink.vue') , meta: { keepAlive: true } },
         { path: 'leavemessage', component: ()=> import('../views/ForegroundPage/Leavemessage.vue'), meta: { keepAlive: true } },
-        { path: 'weather', component: ()=> import('../views/ForegroundPage/weathe.vue'), meta: { keepAlive: true } },
-        { path: 'subfriend', component:()=> import('../views/ForegroundPage/SubmitFriendlink.vue') , meta: { keepAlive: true } },
+        { path: 'weather', component: ()=> import('../views/ForegroundPage/Weathe.vue'), meta: { keepAlive: true } },
+        { path: '/subfriend', component:()=> import('../views/ForegroundPage/SubmitFriendlink.vue') , meta: { keepAlive: true } },
       ]
     },
      //做404跳转
-    //  { path: '/:pathMatch(.*)*', redirect: '/404',component: ()=> import('../views/ForegroundPage/404.vue') }
+     {path:'/404',component:()=>import('../views/ForegroundPage/404.vue')},
+     //没有匹配道则重定向到404页面
+     { path: "/:pathMatch(.*)", redirect: "/404", name: "notMatch", hidden: true },
   ]
 })
 
