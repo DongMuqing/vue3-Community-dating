@@ -1,15 +1,26 @@
 <script setup>
-import {ref } from 'vue'
+import { watch,ref, onMounted,onBeforeUnmount } from 'vue'
 import menus from "@/api/open/menu";
 import statistic from '@/api/open/statistics'
 import { useRouter } from "vue-router"
-const isCollapses = ref(true)
+import { menuStore } from '@/store/menu';
+
+
+const menuStores = menuStore()
+const isCollapses = ref()
+// 监听 pinia中menuFlag 的变化
+watch(() => menuStores.getMenuFlag(), (newVal) => {
+  isCollapses.value = newVal;
+});
 //列表数据
 const menuData = ref()
 //站点信息
 const statistics = ref([])
 //路由
 const router = useRouter();
+onMounted(() => {
+  isCollapses.value = menuStores.getMenuFlag()
+})
 //去登陆
 const goLogin = () => {
   router.push('/login')
@@ -58,15 +69,19 @@ const checkDeviceSize = () => {
   const deviceWidth = window.innerWidth || document.documentElement.clientWidth;
   // 判断设备宽度是否大于某个阈值（这里假设大于 768px 为大设备）
   if (deviceWidth < 768) {
-    isCollapses.value = false
+    menuStores.setMenuFlag(false)
   } else {
-    isCollapses.value = true
+    menuStores.setMenuFlag(true)
   }
 }
 
-window.addEventListener('resize', checkDeviceSize());
-// 在组件销毁前移除窗口大小变化的监听
-window.removeEventListener('resize', checkDeviceSize());
+ // 添加 resize 事件监听器
+ window.addEventListener('resize', checkDeviceSize);
+
+// 在组件卸载时移除事件监听器，以防止内存泄漏
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkDeviceSize);
+});
 
 </script>
 
@@ -76,11 +91,9 @@ window.removeEventListener('resize', checkDeviceSize());
     <!-- 菜单 -->
     <div class="nav">
       <el-row class="tac">
-        <el-col :span="28" v-for="(data, index) in menuData" >
-          <el-menu default-active="2" 
-          class="el-menu-vertical-demo" 
-          active-text-color="none"
-          @click="clickMenu(data.path)"  >
+        <el-col :span="28" v-for="(data, index) in menuData">
+          <el-menu default-active="2" class="el-menu-vertical-demo" active-text-color="none"
+            @click="clickMenu(data.path)">
             <el-menu-item index="data.id" :key="data.id">
               <!-- <component> 标签在 Vue.js 中用于动态地渲染组件。这是一个抽象的组件，它根据提供的 :is 属性的值来渲染相应的组件。 -->
               <!-- <location />  渲染为这样的-->
@@ -111,11 +124,11 @@ window.removeEventListener('resize', checkDeviceSize());
       <h2>站点信息</h2>
       <li>
         <span>动态</span>
-        <small>{{ statistics[1]}}</small>
+        <small>{{ statistics[1] }}</small>
       </li>
       <li>
         <span>浏览</span>
-        <small>{{ statistics[0]}}</small>
+        <small>{{ statistics[0] }}</small>
       </li>
     </div>
 

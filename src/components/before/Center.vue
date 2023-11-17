@@ -1,27 +1,43 @@
 <script setup>
-import { ref } from 'vue'
-const isCollapses = ref(false)
+import { onBeforeUnmount, ref, onMounted } from 'vue'
+import { menuStore } from '@/store/menu';
+
+
+const menuStores = menuStore()
+const isCollapses =ref()
+const changMenu = () => {
+  menuStores.setMenuFlag(!isCollapses.value)
+  isCollapses.value = menuStores.menuFlag
+}
+
 const checkDeviceSize = () => {
   // 获取设备宽度
   const deviceWidth = window.innerWidth || document.documentElement.clientWidth;
   // 判断设备宽度是否大于某个阈值（这里假设大于 768px 为大设备）
   if (deviceWidth < 768) {
-    isCollapses.value = false
+    menuStores.setMenuFlag(false)
   } else {
-    isCollapses.value = true
+    menuStores.setMenuFlag(true)
   }
 }
+onMounted(()=>{
+  isCollapses.value=menuStores.menuFlag
+})
 checkDeviceSize()
 
-window.addEventListener('resize', checkDeviceSize());
-// 在组件销毁前移除窗口大小变化的监听
-window.removeEventListener('resize', checkDeviceSize());
+ // 添加 resize 事件监听器
+ window.addEventListener('resize', checkDeviceSize);
+
+// 在组件卸载时移除事件监听器，以防止内存泄漏
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkDeviceSize);
+});
 </script>
 
 <template>
   <div class="center">
     <div class="search">
-      <a><img src="../../assets/img/更多.png" alt="" @click="sendMsg"></a>
+      <a><img src="../../assets/img/更多.png" alt="" @click="changMenu"></a>
       <!-- <el-button style="margin-right: 20px" @click="sendMsg" icon="el-icon-menu" size="mini"></el-button> -->
       <input type="text" placeholder="文章 | Search">
     </div>
@@ -35,7 +51,7 @@ window.removeEventListener('resize', checkDeviceSize());
         <component :is="Component" />
       </transition>
     </router-view>
-   
+
     <div class="record-author-info">
       <div>
         <a href="https://beian.miit.gov.cn">
@@ -186,4 +202,5 @@ window.removeEventListener('resize', checkDeviceSize());
 */
 .center::-webkit-scrollbar {
   display: none;
-}</style>
+}
+</style>
