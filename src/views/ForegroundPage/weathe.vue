@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import weathers from '@/api/open/weather';
 import address from '@/api/open/visitorInfo';
-
+import { ElMessage } from 'element-plus'
 
 const city = ref('')
 const weather = ref([])
@@ -13,22 +13,24 @@ const livesWeather = ref([])
 const forecast = ref(false)
 //实况天气
 const realTime = ref(true)
-
+const showweather=ref()
 const fetchWeather = () => {
     //预报天气
     weathers.getWeather()
         .then(response => {
-            // 处理接口返回的数据
-            const city = response.data.data.forecasts[0].city;
-            if (city===undefined) {
-                //未获取到天气信息
-                weather.value=null
-            } else {
+            if (response.data.data.count != 0) {
+                const city = response.data.data.forecasts[0].city;
                 city.value = city
                 const data = response.data.data.forecasts[0].casts;
                 weather.value = data;
                 const reporttime = response.data.data.forecasts[0].reporttime;
                 reporttime.value = reporttime;
+            } else {
+                ElMessage({
+                    message: "暂未查询到天气！",
+                    type: 'warning'
+                })
+                showweather.value=false
             }
 
         })
@@ -41,12 +43,9 @@ fetchWeather()
 const fetchActualWeather = () => {
     weathers.getActualWeather()
         .then(res => {
-            const { lives } = res.data.data
-            const data = lives[0]
-            if (data === undefined) {
-                   //未获取到天气信息
-                livesWeather = []
-            } else {
+            const { lives, count } = res.data.data
+            if (count != 0) {
+                const data = lives[0]
                 livesWeather.value = data;
             }
         })
@@ -56,22 +55,13 @@ const fetchActualWeather = () => {
 }
 fetchActualWeather()
 //访客信息
-const fetchVisitorInfo = () => {
-    address.getVisitorInfo()
-        .then(response => {
-
-        })
-        .catch(error => {
-            // 处理错误
-        });
-}
+const fetchVisitorInfo = () => { address.getVisitorInfo() }
 fetchVisitorInfo()
 //切换查看天气
 const changweather = () => {
     realTime.value = !realTime.value
     forecast.value = !forecast.value
 }
-
 </script>
 
 
@@ -84,43 +74,44 @@ const changweather = () => {
             </div>
         </div>
         <!-- //实时天气 默认显示天气 -->
-        <div class="two" v-if="realTime">
-            <div class="card" v-if="livesWeather!=''">
-                <h2>weathe in {{ livesWeather.province }}</h2>
-                <div class="weather">
-                    <p>天气:{{ livesWeather.weather }}</p>
-                    <p>温度:{{ livesWeather.temperature_float }}°C</p>
-                    <p>空气湿度:{{ livesWeather.humidity }}</p>
-                    <p>风力:{{ livesWeather.windpower }}</p>
-                    <p>风向:{{ livesWeather.winddirection }}</p>
+        <div v-show="showweather">
+            <div class="two" v-if="realTime">
+                <div class="card">
+                    <h2>weathe in {{ livesWeather.province }}</h2>
+                    <div class="weather">
+                        <p>天气:{{ livesWeather.weather }}</p>
+                        <p>温度:{{ livesWeather.temperature_float }}°C</p>
+                        <p>空气湿度:{{ livesWeather.humidity }}</p>
+                        <p>风力:{{ livesWeather.windpower }}</p>
+                        <p>风向:{{ livesWeather.winddirection }}</p>
+                    </div>
+                    <h3>预报发布时间:<br>{{ livesWeather.reporttime }}</h3>
                 </div>
-                <h3>预报发布时间:<br>{{ livesWeather.reporttime }}</h3>
             </div>
-            <div  class="card" v-if="livesWeather!=''">
-                <h2>暂未获取到天气！</h2>
+            <!-- //预报天气 -->
+            <div class="two" v-if="forecast">
+                <div class="card">
+                    <h2>weathe in {{ city }}</h2>
+                    <div class="weather" v-for="(weather, index) in  weather" :key="index">
+                        <p>日期:{{ weather.date }}</p>
+                        <p> 星期:{{ weather.week }}</p>
+                        <p>白天:{{ weather.dayweather }} 温度:{{ weather.daytemp }}°C </p>
+                        <p>晚上:{{ weather.nightweather }} 温度:{{ weather.nighttemp }}°C </p>
+                    </div>
+                    <h3>预报发布时间:<br>{{ reporttime }}</h3>
+                </div>
+            </div>
+            <div>
+                <el-row>
+                    <el-button round @click="changweather">查看预报天气</el-button>
+                    <el-button round @click="changweather">查看实况天气</el-button>
+                </el-row>
             </div>
         </div>
-        <!-- //预报天气 -->
-        <div class="two" v-if="forecast">
-            <div class="card" v-if="weather!=''">
-                <h2>weathe in {{ city }}</h2>
-                <div class="weather" v-for="(weather, index) in  weather" :key="index">
-                    <p>日期:{{ weather.date }}</p>
-                    <p> 星期:{{ weather.week }}</p>
-                    <p>白天:{{ weather.dayweather }} 温度:{{ weather.daytemp }}°C </p>
-                    <p>晚上:{{ weather.nightweather }} 温度:{{ weather.nighttemp }}°C </p>
-                </div>
-                <h3>预报发布时间:<br>{{ reporttime }}</h3>
+        <div v-show="!showweather" class="two">
+            <div class="card">
+                <h2>暂未查询到天气！</h2>
             </div>
-            <div  class="card" v-if="weather=''">
-                <h2>暂未获取到天气！</h2>
-            </div>
-        </div>
-        <div>
-            <el-row>
-                <el-button round @click="changweather">查看预报天气</el-button>
-                <el-button round @click="changweather">查看实况天气</el-button>
-            </el-row>
         </div>
     </div>
 </template>
