@@ -30,7 +30,10 @@ window.removeEventListener('resize', checkDeviceSize());
       <img src="https://oss.qingmumu.xyz/Blog/Backdrop/e47d3e664df3b2a0e975e15d6b845e38104346114.jpg" alt="">
     </div>
 
-    <router-view class="information">
+    <router-view class="information" v-slot="{ Component }">
+      <transition name="fade">
+        <component :is="Component" />
+      </transition>
     </router-view>
    
     <div class="record-author-info">

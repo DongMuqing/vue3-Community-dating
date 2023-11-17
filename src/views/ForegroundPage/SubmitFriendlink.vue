@@ -1,78 +1,61 @@
 <script setup>
 import submitFriendlink from '@/api/open/friendlink';
 import { ref } from 'vue';
-import { compressImg } from '@/utils/compress';
+import { ElMessage } from 'element-plus'
+
+import { useRouter } from "vue-router"
+//路由
+const router = useRouter()
 
 const formData = ref({
+  logo: '',
   url: '',
   name: '',
   intro: ''
 });
-const imageUrl = ref('');
-const fileList = ref([]);
-const previewImage = ref(null);
-import { ElMessage } from 'element-plus'
 const submitForm = () => {
   const formDataObj = new FormData();
   formDataObj.append('url', formData.value.url);
   formDataObj.append('name', formData.value.name);
   formDataObj.append('intro', formData.value.intro);
-  formDataObj.append('logo', fileList.value);
-  
+  formDataObj.append('logo', formData.value.logo);
+
   submitFriendlink.submitFriendlinks(formDataObj)
     .then(res => {
       if (res.data.code == 20011) {
         ElMessage({
           message: res.data.msg,
           type: 'success'
-        });
+        })
+        formData.value = {
+          logo: '',
+          url: '',
+          name: '',
+          intro: ''
+        }
+      } else if (res.data.code = 20010) {
+        ElMessage({
+          message: res.data.msg,
+          type: 'warning'
+        })
       }
     })
     .catch(error => {
-    
+
     })
-    .finally(() => {
-      // 无论成功或失败，清空文件列表和预览图片
-      fileList.value = [];
-      previewImage.value = null;
-    });
-};
-
-const submitUpload = () => {
-  $refs.upload.submit();
-};
-
-const handleFileChange = async (event) => {
-  const files = event.target.files;
-
-  // 获得图片路径进行预览
-  previewImage.value = URL.createObjectURL(files[0]);
-
-  // 压缩当前图片
-  const compressedFiles = await Promise.all(
-    Array.from(files).map((file) => compressImage(file, 0.85))
-  );
-
-  fileList.value = compressedFiles[0].file;
-};
-
-const compressImage = async (file, quality) => {
-  // 在 Vue 组件中使用
-  return compressImg(file, quality);
-};
+}
+const goBack = () => {
+  router.go(-1)
+}
 </script>
 
 <template>
   <div>
-    <div class="subimg">
-      <p>请选择网站logo</p>
-      <!-- accept限制上传的文件类型 -->
-      <input type="file" name="logo" @change="handleFileChange" accept="image/*">
-    </div>
-    <div v-if="previewImage" class="showimg">
-      <img :src="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px;">
-    </div>
+    <el-button @click="goBack">返回</el-button>
     <el-form ref="form" :model="formData" label-width="100px" @submit.native.prevent>
+      <el-form-item label="网站封面" prop="url">
+        <el-input v-model="formData.logo" placeholder="Eg.https://1.jpg"></el-input>
+      </el-form-item>
       <el-form-item label="网站地址" prop="url">
         <el-input v-model="formData.url" placeholder="Eg.https://qingmumu.xyz"></el-input>
       </el-form-item>
@@ -95,6 +78,7 @@ const compressImage = async (file, quality) => {
 .subimg {
   margin: 50px 0px 10px 30px;
   color: var(--pColor);
+
   p {
     font-size: 20px;
     color: var(--pColor);

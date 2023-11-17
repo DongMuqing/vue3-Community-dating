@@ -23,7 +23,6 @@ const router = createRouter({
         { path: 'articles/:id', name: 'articles', component:()=> import('../views/ForegroundPage/ArticleContent.vue') , props: true },
         { path: 'friendlink', component:()=> import('../views/ForegroundPage/Friendlink.vue') , meta: { keepAlive: true } },
         { path: 'leavemessage', component: ()=> import('../views/ForegroundPage/Leavemessage.vue'), meta: { keepAlive: true } },
-        { path: 'weather', component: ()=> import('../views/ForegroundPage/Weathe.vue'), meta: { keepAlive: true } },
         { path: '/subfriend', component:()=> import('../views/ForegroundPage/SubmitFriendlink.vue') , meta: { keepAlive: true } },
       ]
     },

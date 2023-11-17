@@ -17,7 +17,7 @@ const renderMarkdown = () => {
 
 const goBack = () => {
     // 后退到之前页面
-    router.push('/home/article');
+    router.go(-1);
 };
 
 onMounted(() => {
