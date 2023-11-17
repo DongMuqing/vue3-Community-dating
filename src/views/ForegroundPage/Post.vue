@@ -180,7 +180,12 @@ const giveLike = (id) => {
 
         <div class="demo-image__preview">
           <div v-for="(src, index) in dynamic.imgSrcList" class="test">
-            <el-image :src="src" :preview-src-list="dynamic.imgSrcList" :key="index" lazy>
+            <el-image 
+            :src="src" 
+            :zoom-rate="1.2"
+            :preview-src-list="dynamic.imgSrcList" 
+            :key="index" 
+            lazy>
             </el-image>
           </div>
         </div>
@@ -298,18 +303,26 @@ const giveLike = (id) => {
       }
 
       .demo-image__preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(calc(33.33% - 10px), 1fr));
+        grid-gap: 10px; /* 可以根据需要调整间距 */
         width: 100%;
-
-        .el-image {
+        .test{
           width: 108px;
           height: 108px;
-          margin-right: 10px;
-          border-radius: 15% 15%;
-
-          @media screen and (max-width: 600px) {
-            width: 25vw;
+          margin-bottom: 10px;
+          .el-image {
+            width: 108px;
+            height: 108px;
+            margin-right: 10px;
+            border-radius: 15% 15%;
+  
+            @media screen and (max-width: 600px) {
+              width: 25vw;
+            }
           }
         }
+      
       }
     }
   }
