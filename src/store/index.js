@@ -1,10 +1,10 @@
-import { ref, computed } from 'vue'
-
 import { defineStore } from 'pinia';
 
 export const useArticlesStore = defineStore('articles', {
   state: () => ({
+    //文章数据
     articles: [],
+    //当前查看文章详情的index唯一id
     id: ''
   }),
   actions: {
@@ -15,7 +15,6 @@ export const useArticlesStore = defineStore('articles', {
       this.id = id;
     },
     getArticleById() {
-      console.log(this.id);
       return this.articles.find(article => article.id === this.id);
     },
   },
