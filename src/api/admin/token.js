@@ -1,5 +1,5 @@
 import axios from '@/utils/request' 
-
+import { userStore } from '@/store/user'
 
 const token = {
     // 1. 获取所有
@@ -8,7 +8,7 @@ const token = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json' ,// 添加Content-Type请求头
-        'satoken':localStorage.getItem("satoken")
+        'satoken':userStore().getToken
       },
     }),
   
