@@ -1,5 +1,5 @@
 import ossUtil from "@/api/admin/oss";
-import { Message } from 'element-ui'; // 导入Element UI的消息通知
+import { ElMessage } from 'element-plus'; // 导入Element UI的消息通知
 export function uploadPostImage(fileList) {
     return checkAndUploadFiles(fileList, ossUtil.uploadPostImage);
 }
@@ -22,7 +22,7 @@ function checkAndUploadFiles(fileList, uploadMethod) {
 
             uploadMethod(formData)
                 .then(res => {
-                    Message({
+                    ElMessage({
                         message: res.data.msg,
                         type: 'success'
                     })
@@ -32,7 +32,7 @@ function checkAndUploadFiles(fileList, uploadMethod) {
                     reject(error);
                 });
         } else {
-            Message({
+            ElMessage({
                 message: "上传文件不可为空！",
                 type: 'warning'
             });
