@@ -2,58 +2,88 @@
 import submitFriendlink from '@/api/open/friendlink';
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus'
-
 import { useRouter } from "vue-router"
 //路由
 const router = useRouter()
-
+//表单ref对象
+const formRef = ref(null)
+//提交的数据
 const formData = ref({
   logo: '',
   url: '',
   name: '',
   intro: ''
 });
-const submitForm = () => {
-  const formDataObj = new FormData();
-  formDataObj.append('url', formData.value.url);
-  formDataObj.append('name', formData.value.name);
-  formDataObj.append('intro', formData.value.intro);
-  formDataObj.append('logo', formData.value.logo);
-
-  submitFriendlink.submitFriendlinks(formDataObj)
-    .then(res => {
-      if (res.data.code == 20011) {
-        ElMessage({
-          message: res.data.msg,
-          type: 'success'
+const submitForm = async (formEl) => {
+  if (!formEl) return
+  await formEl.validate((valid) => {
+    if (valid) {
+      const formDataObj = new FormData();
+      formDataObj.append('url', formData.value.url);
+      formDataObj.append('name', formData.value.name);
+      formDataObj.append('intro', formData.value.intro);
+      formDataObj.append('logo', formData.value.logo);
+      submitFriendlink.submitFriendlinks(formDataObj)
+        .then(res => {
+          if (res.data.code == 20011) {
+            ElMessage({
+              message: res.data.msg,
+              type: 'success'
+            })
+            formData.value = {
+              logo: '',
+              url: '',
+              name: '',
+              intro: ''
+            }
+          } else if (res.data.code = 20010) {
+            ElMessage({
+              message: res.data.msg,
+              type: 'warning'
+            })
+          }
         })
-        formData.value = {
-          logo: '',
-          url: '',
-          name: '',
-          intro: ''
-        }
-      } else if (res.data.code = 20010) {
-        ElMessage({
-          message: res.data.msg,
-          type: 'warning'
-        })
-      }
-    })
-    .catch(error => {
+        .catch(error => {
 
-    })
+        })
+    }
+  })
 }
 const goBack = () => {
   router.go(-1)
 }
+
+//数据效验规则
+const rules = {
+  logo: [
+    { required: true, message: '请输入网站封面', trigger: 'change' },
+    { type: 'url', message: '请输入封面地址！', trigger: 'change' },
+  ],
+  url: [
+    { required: true, message: '请输入网站地址', trigger: 'change' },
+    { type: 'url', message: '请输入有效的网站地址！', trigger: 'change' },
+  ],
+  name:
+    [
+      { required: true, message: '请输入网站名字！', trigger: 'change' }
+    ],
+  intro:
+    [
+      { required: true, message: '请输入网站简介！', trigger: 'change' }
+    ],
+}
+//清空
+const resetForm = (formEl) => {
+  if (!formEl) return
+  formEl.resetFields()
+};
 </script>
 
 <template>
   <div>
     <el-button @click="goBack">返回</el-button>
-    <el-form ref="form" :model="formData" label-width="100px" @submit.native.prevent>
-      <el-form-item label="网站封面" prop="url">
+    <el-form ref="formRef" :model="formData" label-width="100px" @submit.native.prevent :rules="rules">
+      <el-form-item label="网站封面" prop="logo">
         <el-input v-model="formData.logo" placeholder="Eg.https://1.jpg"></el-input>
       </el-form-item>
       <el-form-item label="网站地址" prop="url">
@@ -66,7 +96,8 @@ const goBack = () => {
         <el-input v-model="formData.intro" placeholder="请输入网站简介"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm">提交</el-button>
+        <el-button type="primary" @click="submitForm(formRef)">提交</el-button>
+        <el-button @click="resetForm(formRef)">清空</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -129,4 +160,4 @@ const goBack = () => {
     }
   }
 }
-</style>@/api/friendlink/friendlink
+</style>

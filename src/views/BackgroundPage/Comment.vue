@@ -2,7 +2,9 @@
 import comments from '@/api/admin/comment';
 import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-
+onMounted(() => {
+  fetchComments();
+})
 const Comments = ref([]);
 //分页相关属性
 //总条数
@@ -20,6 +22,7 @@ const disabled = ref(false)
 
 const id = ref('');
 const roleFlag = ref('');
+
 const fetchComments = () => {
   comments.getComments(current.value, size.value)
     .then(res => {
@@ -33,9 +36,6 @@ const fetchComments = () => {
         type: 'success',
       });
     })
-    .catch(error => {
-      // Handle errors
-    });
 };
 
 const deleteComment = (id) => {
@@ -47,8 +47,6 @@ const deleteComment = (id) => {
       });
       fetchComments();
     })
-    .catch(error => {
-    });
 };
 
 const handleSizeChange = (val) => {
@@ -60,13 +58,6 @@ const handleCurrentChange = (val) => {
   current.value = val;
   fetchComments();
 };
-
-
-
-onMounted(() => {
-  fetchComments();
- 
-});
 </script>
 
 

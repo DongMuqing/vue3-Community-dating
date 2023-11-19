@@ -3,7 +3,9 @@ import visInfo from '@/api/admin/visitorInfo';
 import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from "vue-router"
-
+onMounted(() => {
+  fetchVisitorInfo();
+})
 const router = useRouter()
 const  VisitorInfo=ref([])
 //分页相关属性
@@ -45,9 +47,7 @@ const handleCurrentChange = (val) => {
   fetchVisitorInfo();
 };
 
-onMounted(() => {
-  fetchVisitorInfo();
-});
+
 </script>
 
 <template>

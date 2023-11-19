@@ -1,13 +1,3 @@
-<template>
-    <div class="prefixCls" :style="{ width: containerWidth }">
-        <textarea
-            :id="tinymceId"
-            ref="elRef"
-            :style="{ visibility: 'hidden' }"
-        ></textarea>
-    </div>
-</template>
-
 <script setup>
 import tinymce from 'tinymce/tinymce'
 import 'tinymce/themes/silver'
@@ -41,7 +31,6 @@ import 'tinymce/plugins/visualblocks'
 import 'tinymce/plugins/visualchars'
 import 'tinymce/plugins/wordcount'
 // import 'tinymce/plugins/table';
-
 import { computed, nextTick, ref, unref, watch, onDeactivated, onBeforeUnmount, defineProps, defineEmits, getCurrentInstance } from 'vue'
 import { toolbar, plugins } from './tinymce'
 import { buildShortUUID } from '@/utils/tinymce'
@@ -49,6 +38,24 @@ import { bindHandlers } from './helper'
 import { onMountedOrActivated } from '@/utils/tinymce'
 import { isNumber } from '@/utils/tinymce'
 
+onMountedOrActivated(() => {
+    if (!initOptions.value.inline) {
+        tinymceId.value = buildShortUUID('tiny-vue')
+    }
+    nextTick(() => {
+        setTimeout(() => {
+            initEditor()
+        }, 30)
+    })
+})
+
+onBeforeUnmount(() => {
+    destory()
+})
+
+onDeactivated(() => {
+    destory()
+})
 const props = defineProps({
     options: {
         type: Object,
@@ -147,24 +154,6 @@ watch(
     }
 )
 
-onMountedOrActivated(() => {
-    if (!initOptions.value.inline) {
-        tinymceId.value = buildShortUUID('tiny-vue')
-    }
-    nextTick(() => {
-        setTimeout(() => {
-            initEditor()
-        }, 30)
-    })
-})
-
-onBeforeUnmount(() => {
-    destory()
-})
-
-onDeactivated(() => {
-    destory()
-})
 
 function destory () {
     if (tinymce !== null) {
@@ -266,6 +255,16 @@ function getUploadingImgName (name) {
     return `[uploading:${name}]`
 }
 </script>
+
+<template>
+    <div class="prefixCls" :style="{ width: containerWidth }">
+        <textarea
+            :id="tinymceId"
+            ref="elRef"
+            :style="{ visibility: 'hidden' }"
+        ></textarea>
+    </div>
+</template>
 
 <style lang="less" scoped>
 .prefixCls{

@@ -2,7 +2,9 @@
 import ossUtil from '@/api/admin/oss'
 import { ref, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
-
+onMounted(() => {
+  fetchDirectory();
+})
 //分页相关属性
 //总条数
 const total = ref(0);
@@ -126,9 +128,7 @@ const upload = () => {
 watch(selectDirectory, (newValue, oldValue) => {
   getFilePage(newValue)
 });
-onMounted(() => {
-  fetchDirectory();
-});
+
 </script>
 
 

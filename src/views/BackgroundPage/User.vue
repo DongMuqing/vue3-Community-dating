@@ -2,7 +2,9 @@
 import users from '@/api/admin/user';
 import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-
+onMounted(() => {
+  fetchUserInfo();
+})
 const userInfo = ref([]);
 //分页相关属性
 //总条数
@@ -80,9 +82,7 @@ const handleCurrentChange = (val) => {
   fetchUserInfo();
 };
 
-onMounted(() => {
-  fetchUserInfo();
-});
+
 
 </script>
 

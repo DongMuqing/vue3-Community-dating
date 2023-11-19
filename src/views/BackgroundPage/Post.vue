@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue';
 import getPost from '@/api/admin/post';
 import { uploadPostImage } from '@/utils/upload';
 import { ElMessage } from 'element-plus';
+onMounted(() => {
+  fetchDynamics();
+})
 
 
 const post = ref([]);
@@ -121,9 +124,6 @@ const handleDelete = (id) => {
     });
 };
 
-onMounted(() => {
-  fetchDynamics();
-});
 
 </script>
 <template>

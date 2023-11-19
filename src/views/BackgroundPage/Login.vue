@@ -1,10 +1,33 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import users from '@/api/open/user';
-import { userStore } from '@/store/user';
-import { ElMessage } from 'element-plus';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import users from '@/api/open/user'
+import { userStore } from '@/store/user'
+import { ElMessage } from 'element-plus'
 import { useRouter } from "vue-router"
+onMounted(() => {
+    window.addEventListener('keydown', keyDown);
+    const login = document.getElementById('login');
+    const register = document.getElementById('register');
+    const formBox = document.querySelector('.form-box');
+    const registerBox = document.querySelector('.register-box');
+    const loginBox = document.querySelector('.login-box');
 
+    register.addEventListener('click', () => {
+        formBox.style.transform = 'translateX(90%)';
+        loginBox.classList.add('hidden');
+        registerBox.classList.remove('hidden');
+    });
+
+    login.addEventListener('click', () => {
+        formBox.style.transform = 'translateX(-10%)';
+        registerBox.classList.add('hidden');
+        loginBox.classList.remove('hidden');
+    });
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', keyDown);
+});
 const router = useRouter()
 const pwdFlag = ref(true);
 const user = ref({
@@ -34,6 +57,7 @@ const login = () => {
             if (res.data.code === 20041) {
                 const { tokenInfo } = res.data.data;
                 userStores.setUserInfo(res.data.data);
+                userStores. setToken(tokenInfo.tokenValue)
                 localStorage.setItem(tokenInfo.tokenName, tokenInfo.tokenValue);
                 ElMessage({
                     message: res.data.msg,
@@ -88,30 +112,7 @@ const keyDown = (e) => {
     }
 };
 
-onMounted(() => {
-    window.addEventListener('keydown', keyDown);
-    const login = document.getElementById('login');
-    const register = document.getElementById('register');
-    const formBox = document.querySelector('.form-box');
-    const registerBox = document.querySelector('.register-box');
-    const loginBox = document.querySelector('.login-box');
 
-    register.addEventListener('click', () => {
-        formBox.style.transform = 'translateX(90%)';
-        loginBox.classList.add('hidden');
-        registerBox.classList.remove('hidden');
-    });
-
-    login.addEventListener('click', () => {
-        formBox.style.transform = 'translateX(-10%)';
-        registerBox.classList.add('hidden');
-        loginBox.classList.remove('hidden');
-    });
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener('keydown', keyDown);
-});
 </script>
 
 

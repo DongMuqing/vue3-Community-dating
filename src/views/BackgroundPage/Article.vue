@@ -5,10 +5,10 @@ import getarticles from '@/api/admin/article'
 import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from "vue-router"
-
+onMounted(() => {
+  getArticle();
+});
 const router = useRouter()
-
-const contentEditor = ref('');
 const article = ref({
   cover: '',
   title: '',
@@ -52,58 +52,6 @@ const handleCurrentChange = (val) => {
   current.value = val;
   getArticle();
 };
-
-const createEditor = () => {
-  contentEditor.value = new Vditor('vditor', {
-    height: 660,
-    icon: 'material',
-    placeholder: '开始编辑',
-    toolbarConfig: {
-      pin: true,
-    },
-    cache: {
-      after(text) {},
-    },
-    counter: {
-      enable: true,
-    },
-    resize: {
-      enable: true,
-      position: 'bottom',
-    },
-  });
-};
-// 提交
-const submitForm = () => {
-  formatDate();
-  const value = contentEditor.value.getValue();
-  article.content = value;
-  if (value.length === 1 || value == null || value === '') {
-    ElMessage({
-      message: '不可以为空！',
-      type: 'warning',
-    });
-  } else {
-    getarticles.value.addArticles(article)
-      .then(response => {
-        ElMessage({
-          message: response.data.msg,
-          type: 'success',
-        });
-        contentEditor.value.setValue('');
-        const newEmptyArticle = {
-          cover: '',
-          title: '',
-          content: '',
-          createTime: '',
-        };
-        Object.assign(article, newEmptyArticle);
-      })
-      .catch(error => {
-
-      });
-  }
-};
 //获取
 const getArticle = () => {
   getarticles.getArticleByUser(current.value, size.value)
@@ -131,18 +79,7 @@ const handleDelete = (id) => {
     });
 };
 
-const formatDate = () => {
-  Releasetime.date = formaDate(Releasetime.date);
-  Releasetime.time = formaTime(Releasetime.time);
-  article.createTime = Releasetime.date + ' ' + Releasetime.time;
-  Releasetime.date = '';
-  Releasetime.time = '';
-};
 
-onMounted(() => {
-  createEditor();
-  getArticle();
-});
 </script>
 
 

@@ -1,3 +1,8 @@
+<script setup>
+import CommonAside from '../../components/after/CommonAsid.vue';
+
+</script>
+
 <template>
   <div>
     <el-container>
@@ -13,11 +18,6 @@
     </el-container>
   </div>
 </template>
-
-<script setup>
-import CommonAside from '../../components/after/CommonAsid.vue';
-
-</script>
 
 <style lang="less" scoped>
 
