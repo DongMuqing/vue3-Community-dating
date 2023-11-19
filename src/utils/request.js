@@ -1,13 +1,15 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { userStore } from '@/store/user';
-import { onUnmounted,watchEffect  } from 'vue';
+import { watchEffect } from 'vue';
 const userStores = userStore();
 
 
 let apiUrl = '';
 
-const stopWatching = watchEffect(() => {
+
+//不能再setup之外的地方使用生命周期（onUnmounted）
+watchEffect(() => {
   const newRole = userStores.getRole
   if (newRole === '管理员') {
     apiUrl = 'http://localhost:8080/api/v1/admin';
@@ -18,9 +20,6 @@ const stopWatching = watchEffect(() => {
 }
 )
 
-onUnmounted(() => {
-  stopWatching();
-});
 
 const service = axios.create({
   baseURL: apiUrl,
