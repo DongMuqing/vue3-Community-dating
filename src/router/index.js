@@ -30,19 +30,22 @@ const router = createRouter({
     {
       path: '/main', component: () => import('../views/BackgroundPage/Main.vue'),
       children: [
-        { path: '', component: () => import('../views/BackgroundPage/Home.vue') , meta: { keepAlive: true }},
-        { path: 'home', component: () => import('../views/BackgroundPage/Home.vue') , meta: { keepAlive: true }},
-        { path: 'post', component: () => import('../views/BackgroundPage/Post.vue') , meta: { keepAlive: true }},
-        { path: 'article', component: () => import('../views/BackgroundPage/Article.vue') , meta: { keepAlive: true }},
-        { path: 'publish', component: () => import('../views/BackgroundPage/Publish.vue') , meta: { keepAlive: true }},
-        { path: 'user', component: () => import('../views/BackgroundPage/User.vue') , meta: { keepAlive: true }},
-        { path: 'visitorInfo', component: () => import('../views/BackgroundPage/VisitorInfo.vue') , meta: { keepAlive: true }},
-        { path: 'comment', component: () => import('../views/BackgroundPage/Comment.vue') , meta: { keepAlive: true }},
-        { path: 'upload',component: () => import('../views/BackgroundPage/Upload.vue') , meta: { keepAlive: true }},
-      ]
+        { path: '', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
+        { path: 'home', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
+        { path: 'post', component: () => import('../views/BackgroundPage/Post.vue'), meta: { keepAlive: true } },
+        { path: 'article', component: () => import('../views/BackgroundPage/Article.vue'), meta: { keepAlive: true } },
+        { path: 'publish', component: () => import('../views/BackgroundPage/Publish.vue'), meta: { keepAlive: true } },
+        { path: 'user', component: () => import('../views/BackgroundPage/User.vue'), meta: { keepAlive: true } },
+        { path: 'visitorInfo', component: () => import('../views/BackgroundPage/VisitorInfo.vue'), meta: { keepAlive: true } },
+        { path: 'comment', component: () => import('../views/BackgroundPage/Comment.vue'), meta: { keepAlive: true } },
+        { path: 'upload', component: () => import('../views/BackgroundPage/Upload.vue'), meta: { keepAlive: true } },
+        { path: 'chat', component: () => import('../views/ForegroundPage/Chat.vue'), meta: { keepAlive: true } },
+      ],
+      meta: { keepAlive: true }
     },
-     //做404跳转 需要放到路由的最后面
-     { path: '/404', component: () => import('../views/ForegroundPage/404.vue') },
+    { path: '/chat', component: () => import('../views/ForegroundPage/Chat.vue'), meta: { keepAlive: true } },
+    //做404跳转 需要放到路由的最后面
+    { path: '/404', component: () => import('../views/ForegroundPage/404.vue') },
     //没有匹配道则重定向到404页面 需要放到路由的最后面
     { path: "/:pathMatch(.*)", redirect: "/404", name: "notMatch", hidden: true },
   ]
@@ -52,7 +55,7 @@ const router = createRouter({
 router.beforeEach(function (to, from, next) {
   //所有子页面都需要在这
   // const satoken = localStorage.getItem("satoken")
-  const pathArr = ['/main', '/main/home', '/main/dynamic', '/main/user', '/main/attract', 'main/publish', '/main/VisitorInfo', '/main/comment', '/main/upload']
+  const pathArr = ['/chat', '/main', '/main/home', '/main/dynamic', '/main/user', '/main/attract', 'main/publish', '/main/VisitorInfo', '/main/comment', '/main/upload','/main/chat']
   if (pathArr.indexOf(to.path) != -1) {
     tokens.getToken()
       .then(response => {

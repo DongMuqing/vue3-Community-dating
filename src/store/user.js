@@ -19,6 +19,15 @@ export const userStore = defineStore('user', {
           },
           getToken(){
             return this.satoken
+          },
+          getId(){
+            return this.userInfo.id
+          },
+          getUserName(){
+            return this.userInfo.username
+          },
+          getAvatar(){
+            return this.userInfo.avatar
           }
     },
     persist: {

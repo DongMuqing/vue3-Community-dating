@@ -1,5 +1,5 @@
 <script setup>
-import CommonAside from '../../components/after/CommonAsid.vue';
+import CommonAside from '@/components/after/CommonAsid.vue'
 
 </script>
 
@@ -10,8 +10,10 @@ import CommonAside from '../../components/after/CommonAsid.vue';
         <CommonAside></CommonAside>
       </el-aside>
       <el-main>
-        <router-view>
-
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component"></component>
+          </keep-alive>
         </router-view>
       </el-main>
 

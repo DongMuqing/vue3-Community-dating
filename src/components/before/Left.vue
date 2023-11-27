@@ -28,6 +28,9 @@ const goLogin = () => {
 const goBackstage = () => {
   router.push('/main')
 }
+const goChat = () => {
+  router.push('/chat')
+}
 const fetchMenus = () => {
   menus.getMenus()
     .then(response => {
@@ -118,6 +121,7 @@ onBeforeUnmount(() => {
       <h2>去往</h2>
       <el-button @click="goLogin">去登陆/注册</el-button>
       <el-button @click="goBackstage">去后台</el-button>
+      <el-button @click="goChat">聊天室</el-button>
     </div>
 
     <div class="site">
