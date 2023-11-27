@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 
-const apiUrl = 'http://localhost:8080/api/v1'
+const apiUrl = import.meta.env.VITE_APP_API_URL_OPEN
 
 const service = axios.create({
     baseURL: apiUrl,

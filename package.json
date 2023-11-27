@@ -2,10 +2,12 @@
   "name": "vue3-community-dating",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode dev",
+    "pro": "vite --mode pro",
     "preview": "vite preview --port 4173",
-    "test:unit": "vitest --environment jsdom"
+    "test:unit": "vitest --environment jsdom",
+    "build:dev": "vite build --mode dev",
+    "build:pro": "vite build --mode pro"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",

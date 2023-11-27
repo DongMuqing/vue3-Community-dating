@@ -12,9 +12,9 @@ let apiUrl = '';
 watchEffect(() => {
   const newRole = userStores.getRole
   if (newRole === '管理员') {
-    apiUrl = 'http://localhost:8080/api/v1/admin';
+    apiUrl = import.meta.env.VITE_APP_API_URL_ADMIN
   } else if (newRole === '用户') {
-    apiUrl = 'http://localhost:8080/api/v1/user';
+    apiUrl = import.meta.env.VITE_APP_API_URL_USER
   }
   return apiUrl;
 }
