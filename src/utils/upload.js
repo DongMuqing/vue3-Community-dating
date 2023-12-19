@@ -22,10 +22,6 @@ function checkAndUploadFiles(fileList, uploadMethod) {
 
             uploadMethod(formData)
                 .then(res => {
-                    ElMessage({
-                        message: res.data.msg,
-                        type: 'success'
-                    })
                     resolve(res.data.data);
                 })
                 .catch(error => {

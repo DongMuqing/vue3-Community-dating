@@ -19,7 +19,7 @@ const dialogVisible = ref(false)
 
 //获取当前的文章内容
 const handleChange = (item) => {
-   console.log(item);
+
 }
 //移除当前上传的文件
 const handleRemove = (uploadFile, uploadFiles) => {
@@ -29,63 +29,89 @@ const handlePictureCardPreview = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url;
   dialogVisible.value = true;
 };
-const submitContent = async () => {
-  if (article.title == '') {
-    ElMessage({
-      message: "请输入标题！",
-      type: 'warning'
-    });
-    return;
-  }
-  if (article.content == '') {
+
+const handlePostUploadLogic = async () => {
+  if (article.value.content == '') {
     ElMessage({
       message: "内容不可为空！",
       type: 'warning'
     });
     return;
   }
-  if (article.cover == '') {
+  if (article.value.title == '') {
     ElMessage({
-      message: "请选择封面！",
+      message: "请输入标题！",
       type: 'warning'
     });
     return;
   }
-  // 先上传封面 获取返回封面地址
-  article.cover= await upload()
-  //提交整个文章
-  addArticle.addArticles().then(res => {
+  try {
+    const res = await addArticle.addArticles(article.value);
     if (res.data.code === 20041) {
       ElMessage({
         message: res.data.msg,
         type: 'success',
-      })
-      //置空当前的内容值
-      content.value = ''
+      });
+
+      // 置空当前的内容值
+      content.value = '';
+
+      const newEmptyArticle = {
+        title: '',
+        content: '',
+        cover: ''
+      };
+
+      article.value = newEmptyArticle;
     } else {
       ElMessage(res.data.msg);
     }
-  })
+  } catch (error) {
+    ElMessage({
+      message: "提交文章时发生错误，请稍后重试！",
+      type: 'error'
+    });
+  }
 }
 
-const upload = () => {
-  if (coverFile.value.length == 1) {
-    uploadArticleImage(coverFile.value.raw)
-      .then(res => {
-        ElMessage({
-          message: res.data.msg,
-          type: 'success',
-        });
-        //置空封面文件
-        coverFile.value = [];
+const submitContent = async () => {
+  try {
+    // 先上传封面 获取返回封面地址
+    await upload();
+
+    // 执行上传后的其他逻辑
+    handlePostUploadLogic();
+  } catch (error) {
+    ElMessage({
+      message: "上传封面时发生错误，请稍后重试！",
+      type: 'error'
+    });
+  }
+}
+const upload = async () => {
+  if (coverFile.value.length === 1) {
+    try {
+      const res = await uploadArticleImage(coverFile.value);
+      // 封面地址
+      article.value.cover = res;
+      // 置空封面文件
+      coverFile.value = [];
+
+      // 执行上传后的其他逻辑
+      handlePostUploadLogic();
+    } catch (error) {
+      ElMessage({
+        message: '上传封面时发生错误，请稍后重试！',
+        type: 'error',
       });
+    }
   } else {
     ElMessage({
       message: '只能上传一张封面',
       type: 'warning',
     });
   }
-} 
+}
 </script>
 
 <template>
