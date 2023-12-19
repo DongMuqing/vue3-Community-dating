@@ -6,6 +6,7 @@ const articles = {
     url: '/article',
     method: 'GET'
   }),
+  // 添加文章
   addArticles: (article) => axios({
     url: '/article/add',
     method: 'POST',
@@ -34,7 +35,7 @@ const articles = {
   //获取用户所有文章
   getArticleByUser: (current,size) => axios({
     url: '/article/get?current='+encodeURIComponent(current)+'&size='+encodeURIComponent(size),
-    method: 'GET',
+    method: 'POST',
     headers: {
       'satoken': localStorage.getItem("satoken")
     },
