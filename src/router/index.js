@@ -31,6 +31,7 @@ const router = createRouter({
       path: '/main', component: () => import('../views/BackgroundPage/Main.vue'),
       children: [
         { path: '', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
+        { path: 'articles/:id', name: 'articles', component: () => import('../views/BackgroundPage/ArticleDetails.vue'), props: true },
         { path: 'home', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
         { path: 'post', component: () => import('../views/BackgroundPage/Post.vue'), meta: { keepAlive: true } },
         { path: 'article', component: () => import('../views/BackgroundPage/Article.vue'), meta: { keepAlive: true } },
