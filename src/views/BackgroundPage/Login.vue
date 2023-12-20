@@ -45,8 +45,8 @@ const loginUser = ref({
 const userStores = userStore();
 
 const reset = () => {
-    user.value.username = '';
-    user.value.password = '';
+    loginUser.value.username = '';
+    loginUser.value.password = '';
 };
 
 const login = () => {
@@ -62,8 +62,10 @@ const login = () => {
                 ElMessage({
                     message: res.data.msg,
                     type: 'success',
-                });
-                router.push('/main');
+                })
+                //清除登录信息
+                reset()
+                router.push('/main')
             } else {
                 ElMessage(res.data.msg);
             }

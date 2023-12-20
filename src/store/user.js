@@ -11,6 +11,10 @@ export const userStore = defineStore('user', {
         },
         setToken(token){
             this.satoken=token
+        },
+        clearUserInfo(){
+            this.userInfo=''
+            this.satoken=''
         }
     },
     getters:{
