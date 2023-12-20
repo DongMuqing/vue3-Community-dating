@@ -35,7 +35,7 @@ const articles = {
   //获取用户所有文章
   getArticleByUser: (current,size) => axios({
     url: '/article/get?current='+encodeURIComponent(current)+'&size='+encodeURIComponent(size),
-    method: 'POST',
+    method: 'GET',
     headers: {
       'satoken': localStorage.getItem("satoken")
     },

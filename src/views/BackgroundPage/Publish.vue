@@ -30,6 +30,42 @@ const handlePictureCardPreview = (uploadFile) => {
   dialogVisible.value = true;
 };
 
+const submitContent = async () => {
+  try {
+    await upload();
+  } catch (error) {
+    ElMessage({
+      message: "上传封面时发生错误，请稍后重试！",
+      type: 'error'
+    });
+  }
+}
+
+const upload = async () => {
+  if (coverFile.value.length === 1) {
+    try {
+      const res = await uploadArticleImage(coverFile.value);
+      // 封面地址
+      article.value.cover = res;
+      // 置空封面文件
+      coverFile.value = [];
+
+      // 执行上传后的其他逻辑
+      handlePostUploadLogic();
+    } catch (error) {
+      ElMessage({
+        message: '上传封面时发生错误，请稍后重试！',
+        type: 'error',
+      });
+    }
+  } else {
+    ElMessage({
+      message: '只能上传一张封面',
+      type: 'warning',
+    });
+  }
+}
+
 const handlePostUploadLogic = async () => {
   if (article.value.content == '') {
     ElMessage({
@@ -70,45 +106,6 @@ const handlePostUploadLogic = async () => {
     ElMessage({
       message: "提交文章时发生错误，请稍后重试！",
       type: 'error'
-    });
-  }
-}
-
-const submitContent = async () => {
-  try {
-    // 先上传封面 获取返回封面地址
-    await upload();
-
-    // 执行上传后的其他逻辑
-    handlePostUploadLogic();
-  } catch (error) {
-    ElMessage({
-      message: "上传封面时发生错误，请稍后重试！",
-      type: 'error'
-    });
-  }
-}
-const upload = async () => {
-  if (coverFile.value.length === 1) {
-    try {
-      const res = await uploadArticleImage(coverFile.value);
-      // 封面地址
-      article.value.cover = res;
-      // 置空封面文件
-      coverFile.value = [];
-
-      // 执行上传后的其他逻辑
-      handlePostUploadLogic();
-    } catch (error) {
-      ElMessage({
-        message: '上传封面时发生错误，请稍后重试！',
-        type: 'error',
-      });
-    }
-  } else {
-    ElMessage({
-      message: '只能上传一张封面',
-      type: 'warning',
     });
   }
 }
