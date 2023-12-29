@@ -14,6 +14,8 @@ export const articleContentStore = defineStore('article', {
       this.articles = articles;
     },
     setId(id) {
+      //清空之前的
+      this.id=''
       this.id = id;
     },
     setContent(content){
