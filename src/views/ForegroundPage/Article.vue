@@ -29,7 +29,7 @@ const handleWork = (row) => {
   // 存入 Pinia   当前文章的index唯一标识
   articlesStore.setId(row);
   router.push({
-    name: 'articles',
+    name: 'article',
     params: {
     id: row,
   },
