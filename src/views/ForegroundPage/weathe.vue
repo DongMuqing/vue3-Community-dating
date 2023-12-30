@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import weathers from '@/api/open/weather';
 import address from '@/api/open/visitorInfo';
 import { ElMessage } from 'element-plus'
@@ -13,32 +13,29 @@ const livesWeather = ref([])
 const forecast = ref(false)
 //实况天气
 const realTime = ref(true)
-const showweather=ref()
+const showweather = ref(true)
 const fetchWeather = () => {
     //预报天气
     weathers.getWeather()
-        .then(response => {
-            if (response.data.data.count != 0) {
-                const city = response.data.data.forecasts[0].city;
-                city.value = city
-                const data = response.data.data.forecasts[0].casts;
-                weather.value = data;
-                const reporttime = response.data.data.forecasts[0].reporttime;
-                reporttime.value = reporttime;
+        .then(res => {
+            const {count:count,forecasts:forecasts,city:citys}=res.data.data
+            if (count != 0) {
+                city.value = citys
+                weather.value = forecasts[0].casts;
+                reporttime.value = forecasts[0].reporttime;
             } else {
                 ElMessage({
                     message: "暂未查询到天气！",
                     type: 'warning'
                 })
-                showweather.value=false
+                showweather.value = false
             }
 
         })
         .catch(error => {
-            // 处理错误
+           
         });
 }
-fetchWeather()
 //实况天气
 const fetchActualWeather = () => {
     weathers.getActualWeather()
@@ -53,15 +50,20 @@ const fetchActualWeather = () => {
 
         })
 }
-fetchActualWeather()
 //访客信息
-const fetchVisitorInfo = () => { address.getVisitorInfo() }
-fetchVisitorInfo()
+const fetchVisitorInfo = () => {
+    address.getVisitorInfo()
+}
 //切换查看天气
 const changweather = () => {
     realTime.value = !realTime.value
     forecast.value = !forecast.value
 }
+onMounted(() => {
+    fetchActualWeather()
+    fetchWeather()
+    fetchVisitorInfo()
+})
 </script>
 
 
@@ -103,8 +105,8 @@ const changweather = () => {
             </div>
             <div>
                 <el-row>
-                    <el-button round @click="changweather">查看预报天气</el-button>
-                    <el-button round @click="changweather">查看实况天气</el-button>
+                    <el-button round @click="changweather" v-if="realTime">查看预报天气</el-button>
+                    <el-button round @click="changweather" v-if="forecast">查看实况天气</el-button>
                 </el-row>
             </div>
         </div>
@@ -130,27 +132,19 @@ const changweather = () => {
     height: 80px;
     margin: 10px auto 40px auto;
     font-size: 16px;
-
     ::-webkit-scrollbar {
         display: none;
     }
-
-
-
     #loading {
         position: fixed;
-
-        /*background: #fff url("../assets//img/loading.svg") no-repeat center;*/
         z-index: 99999;
     }
-
     .cont {
         display: flex;
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
     }
-
     .one {
         margin-top: 1.5em;
         padding: 15px;
@@ -165,13 +159,11 @@ const changweather = () => {
         text-align: center;
         opacity: 0.9;
     }
-
     @media only screen and (max-width: 768px) {
         .one {
             width: auto;
         }
     }
-
     .two {
         display: flex;
         top: 10%;
@@ -179,7 +171,6 @@ const changweather = () => {
         align-items: center;
         box-sizing: border-box;
     }
-
     .card {
         position: relative;
         text-align: none;
@@ -198,7 +189,6 @@ const changweather = () => {
         margin: 1em;
         backdrop-filter: blur(5px);
     }
-
     .search {
         display: flex;
         align-items: center;
@@ -206,7 +196,6 @@ const changweather = () => {
         margin: 0;
         transform: translateZ(30px);
     }
-
     .icon {
         animation: rotates 2.5s linear infinite alternate;
     }
@@ -220,9 +209,6 @@ const changweather = () => {
             transform: translate(0.4em);
         }
     }
-
-
-
     input.search-bar {
         border: none;
         outline: none;
@@ -348,4 +334,4 @@ const changweather = () => {
         opacity: 0.9;
     }
 }
-</style>@/api/weather/weather@/api/address/visitorInfo
+</style>
