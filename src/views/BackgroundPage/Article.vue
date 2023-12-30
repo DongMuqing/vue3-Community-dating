@@ -109,7 +109,6 @@ const handleInfo=(id)=>{
         <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="操作">
           <template  #default="scope">
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
             <el-button size="small" type="primary" @click="handleInfo(scope.row.id)">详情</el-button>
           </template>
