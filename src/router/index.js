@@ -28,7 +28,7 @@ const router = createRouter({
     },
     { path: '/login', component: () => import('../views/BackgroundPage/Login.vue') },
     {
-      path: '/main', component: () => import('../views/BackgroundPage/Main.vue',),
+      path: '/main', component: () => import('../views/BackgroundPage/Main.vue'),
       children: [
         { path: '', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
         { path: 'articles', name: 'articles', component: () => import('../views/BackgroundPage/ArticleDetails.vue') },
