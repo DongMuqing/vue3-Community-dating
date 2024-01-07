@@ -20,7 +20,7 @@ const router = createRouter({
         { path: '', component: () => import('../views/ForegroundPage/Post.vue'), meta: { keepAlive: true } },
         { path: 'post', component: () => import('../views/ForegroundPage/Post.vue'), meta: { keepAlive: true } },
         { path: 'article', component: () => import('../views/ForegroundPage/Article.vue'), meta: { keepAlive: true } },
-        { path: 'articles/:id', name: 'articles', component: () => import('../views/ForegroundPage/ArticleContent.vue'), props: true },
+        { path: 'articles/:id', name: 'article', component: () => import('../views/ForegroundPage/ArticleContent.vue'), props: true },
         { path: 'friendlink', component: () => import('../views/ForegroundPage/Friendlink.vue'), meta: { keepAlive: true } },
         { path: 'leavemessage', component: () => import('../views/ForegroundPage/Leavemessage.vue'), meta: { keepAlive: true } },
         { path: '/subfriend', component: () => import('../views/ForegroundPage/SubmitFriendlink.vue'), meta: { keepAlive: true } },
@@ -28,9 +28,10 @@ const router = createRouter({
     },
     { path: '/login', component: () => import('../views/BackgroundPage/Login.vue') },
     {
-      path: '/main', component: () => import('../views/BackgroundPage/Main.vue'),
+      path: '/main', component: () => import('../views/BackgroundPage/Main.vue',),
       children: [
         { path: '', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
+        { path: 'articles', name: 'articles', component: () => import('../views/BackgroundPage/ArticleDetails.vue') },
         { path: 'home', component: () => import('../views/BackgroundPage/Home.vue'), meta: { keepAlive: true } },
         { path: 'post', component: () => import('../views/BackgroundPage/Post.vue'), meta: { keepAlive: true } },
         { path: 'article', component: () => import('../views/BackgroundPage/Article.vue'), meta: { keepAlive: true } },

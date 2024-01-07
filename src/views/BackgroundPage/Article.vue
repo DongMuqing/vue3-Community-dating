@@ -1,10 +1,11 @@
 <script setup>
-import Vditor from 'vditor'
-import 'vditor/dist/index.css'
 import getarticles from '@/api/admin/article'
 import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from "vue-router"
+import { articleContentStore } from '@/store/admin/article'
+
+const articlesStore = articleContentStore()
 onMounted(() => {
   getArticle();
 });
@@ -61,6 +62,8 @@ const getArticle = () => {
       articles.value = data;
       total.value =newTotal;
       pages.value = newPages;
+       //文章数据存入pinia
+      articlesStore.setArticles(articles.value)
       ElMessage({
         message: msg,
         type: 'success',
@@ -78,7 +81,11 @@ const handleDelete = (id) => {
       getArticle();
     });
 };
-
+//文章详情
+const handleInfo=(id)=>{
+  articlesStore.setId(id)
+  router.push("/main/articles")
+}
 
 </script>
 
@@ -102,9 +109,8 @@ const handleDelete = (id) => {
         <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="操作">
           <template  #default="scope">
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
-            <el-button size="small" type="primary" @click="handleInfo(scope.row.content)">详情</el-button>
+            <el-button size="small" type="primary" @click="handleInfo(scope.row.id)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -476,4 +476,4 @@ const giveLike = (id) => {
     transform: scale(1);
   }
 }
-</style>@/api/dynamic/post@/api/comment/comment
+</style>

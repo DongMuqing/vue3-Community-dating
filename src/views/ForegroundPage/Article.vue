@@ -2,7 +2,7 @@
 import 'vditor/dist/index.css'
 import getarticles from '@/api/open/article';
 import { useRouter } from "vue-router"
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useArticlesStore } from '@/store/index';
 const articlesStore = useArticlesStore();
 
@@ -17,8 +17,8 @@ const fetchArticles = () => {
     .then(response => {
       // 处理接口返回的数据
       articles.value = response.data.data;
-        // 调用 action 存入 Pinia
-        articlesStore.setArticles(articles.value);
+      // 调用 action 存入 Pinia
+      articlesStore.setArticles(articles.value);
     })
     .catch(error => {
       // 处理错误
@@ -29,10 +29,10 @@ const handleWork = (row) => {
   // 存入 Pinia   当前文章的index唯一标识
   articlesStore.setId(row);
   router.push({
-    name: 'articles',
+    name: 'article',
     params: {
-    id: row,
-  },
+      id: row,
+    },
   })
 }
 const truncatedArticle = (index) => {
@@ -116,4 +116,5 @@ const truncatedArticle = (index) => {
       }
     }
   }
-}</style>@/api/article/article
+}
+</style>
