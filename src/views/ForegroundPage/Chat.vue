@@ -146,7 +146,7 @@ onActivated(() => {
     };
     // 错误事件
     socket.onerror = (e) => {
-        console.log("error"+e.target);
+        console.log("error"+e);
         console.log("WebSocket 服务发生错误");
     }
 })
