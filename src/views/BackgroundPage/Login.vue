@@ -57,12 +57,12 @@ const login = () => {
             if (res.data.code === 20041) {
                 const { tokenInfo } = res.data.data;
                 userStores.setUserInfo(res.data.data);
-                userStores. setToken(tokenInfo.tokenValue)
+                userStores.setToken(tokenInfo.tokenValue)
                 localStorage.setItem(tokenInfo.tokenName, tokenInfo.tokenValue);
                 ElMessage({
                     message: res.data.msg,
                     type: 'success',
-                });
+                })
                 router.push('/main');
             } else {
                 ElMessage(res.data.msg);
@@ -77,11 +77,26 @@ const register = () => {
         users
             .register(user.value.email, user.value.username, user.value.password, user.value.code)
             .then((res) => {
-                ElMessage({
-                    message: res.data.msg,
-                    type: 'success',
-                });
-                router.push('/login');
+                if (res.data.code === 20041) {
+                    ElMessage({
+                        message: res.data.msg,
+                        type: 'success',
+                    });
+                    user.value = {
+                        email: '',
+                        username: '',
+                        password: '',
+                        confirmPassword: '',
+                        code: '',
+                    }
+                  
+                } else {
+                    ElMessage({
+                        message: res.data.msg,
+                        type: 'error',
+                    });
+                }
+
             });
     }
 };
@@ -89,16 +104,52 @@ const register = () => {
 const sendCode = () => {
     if (verify()) {
         users.sendCode(user.value.email, user.value.username).then((res) => {
-            ElMessage({
-                message: res.data.msg,
-                type: 'success',
-            });
+            if (res.data.code === 20041) {
+                ElMessage({
+                    message: res.data.msg,
+                    type: 'success',
+                })
+            } else {
+                ElMessage({
+                    message: res.data.msg,
+                    type: 'error',
+                })
+            }
         });
     }
 };
 
 const verify = () => {
-    // Your verification logic here
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(user.value.email)) {
+        ElMessage({
+            message: '请输入合法的邮箱！',
+            type: 'error',
+        });
+        return false;
+    }
+    if (!user.value.username) {
+        ElMessage({
+            message: '请输入用户名！',
+            type: 'error',
+        });
+        return false;
+    }
+    if (user.value.password.length < 8) {
+        ElMessage({
+            message: '密码至少8位！',
+            type: 'error',
+        });
+        return false;
+    }
+    if (user.value.password !== user.value.confirmPassword) {
+        ElMessage({
+            message: '两次密码不一致！',
+            type: 'error',
+        });
+        return false;
+    }
+    return true;
 };
 
 const changge = () => {
